@@ -1,0 +1,384 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+:root{
+    --blue: #1F4E79;
+    --orange: #FF6F00;
+    --gray: #4E4E50;
+}
+html{
+    scroll-behavior: smooth;
+}
+body{
+    font-family: "Roboto", sans-serif !important;
+    font-weight: 400;
+    font-style: normal;
+}
+a{
+    text-decoration: none !important;
+}
+li{
+    list-style-type: none;
+}
+input, textarea, button{
+    border: none;
+    outline: none;
+}
+input:focus, textarea:focus, button:focus, select:focus{
+    border: none;
+    outline: none;
+}
+.orange{
+    color: var(--orange) !important;
+}
+.strict-white{
+    color: #FFF !important;
+}   
+.cleaner{
+    clear: both;
+}
+.fade-in{
+    opacity: 0;
+    position: relative;
+    top: -30px;
+    transition: opacity .7s ease-in, top .7s ease-in;
+}
+.fade-in-after{
+    opacity: 1;
+    top: 0px;
+}
+.enabled{
+    background-color: var(--blue);
+}
+.disabled{
+    background-color: var(--gray);
+}
+
+/* LOADER */
+
+#spinner{
+    border: 15px solid #bababa;
+    width: 100px;
+    height: 100px;
+    border-top-color: var(--orange);
+    animation: spin 1s linear infinite;
+}
+@keyframes spin{
+    0%{
+        transform: rotate(0turn);
+    }
+    100%{
+        transform: rotate(1turn);
+    }
+}
+#loader{
+    opacity: 1;
+    z-index: 1000; 
+    transition: opacity 1s;    
+}
+.loader-done{
+    opacity: 0 !important;
+}
+
+/* BACK TO TOP */
+
+#back-to-top{
+    width: 4rem;
+    height: 4rem;
+    opacity: 0.7;
+    display: none;
+    cursor: pointer;
+    background-color: var(--orange);
+    z-index: 500;
+}
+#back-to-top:hover{
+    opacity: 1 !important;
+}
+#back-to-top i{
+    line-height: 4rem;
+}
+
+/* MODAL */
+
+#modal button{
+    top: 10px;
+    left: 90%;
+    cursor: pointer;
+}
+#modal-bg{
+    background-color: rgba(0,0,0,0.5);
+}
+
+/* HEADER */
+
+header{
+    background-color: rgba(0,0,0,0.3);
+    position: fixed;
+    top: 0;
+    transition: background-color 0.5s;
+}
+.blue-header{
+    background-color: var(--blue);
+    transition: background-color 0.5s;
+}
+#toggler{
+    font-size: 20px;
+    height: 30px;
+    line-height: 30px;
+}
+.toggler-day{
+    border: 2px solid var(--orange) !important;
+    background-color: #FFF;
+    color: var(--orange);
+}
+.toggler-night{
+    border: 2px solid #000 !important;
+    background-color: #000;
+    color: #FFF;
+}
+#hamburger{
+    display: none;
+    background-color: var(--blue);
+    font-size: 30px;
+    height: 30px;
+    line-height: 30px;
+}
+nav a:hover, footer a:hover{
+    color: var(--orange) !important;
+}
+nav ul{
+    margin: 0px;
+}
+nav ul li{
+    margin-left: 25px;
+}
+
+/* BACKGROUND SEKCIJA */
+
+#background h1, #author-background h1{
+    font-size: 70px;
+}
+#background a{
+    width: 180px;
+    height: 40px;
+    background-color: var(--orange);
+}
+#background a:hover{
+    border: 1px solid var(--orange);
+    color: var(--orange);
+    background-color: transparent;
+}
+.bg-slider{
+    background-size: cover;
+    background-blend-mode: multiply;
+    background-color: rgba(0,0,0,0.8);
+}
+.arrow{
+    width: 60px;
+    height: 100px;
+    font-size: 40px;
+    background-color: transparent;
+    top: calc(50% - 50px);
+}
+.arrow:hover, .arrow:focus{
+    background-color: rgba(218, 116, 38, 0.8);
+}
+#previous{
+    left: 0px;
+}
+#next{
+    right: 0px;
+}
+.active{
+    display: flex !important;
+}
+.bg-slider{
+    display: none;
+}
+#dots{
+    width: 100px;
+    left: calc(50% - 50px);
+    bottom: 3%;
+}
+.dot{
+    width: 20px;
+    height: 20px;
+    background-color: var(--orange);
+    opacity: 0.6;
+    cursor: pointer;
+}
+.dot:hover, .dot-active{
+    opacity: 1;
+}
+
+/* ABOUT SEKCIJA */
+
+#qandas h5{
+    cursor: pointer;
+}  
+#qandas p{
+    display: none;
+    padding: 0;
+}   
+#qandas p.show{
+    padding: 10px;
+}
+.rotate-icon{
+    transform: rotate(90deg);
+    transition: transform 0.3s;
+}    
+
+/* SERVISI SEKCIJA */
+
+#services img{
+    height: 50px;
+}
+#services button{
+    border: 1px solid var(--blue);
+    background-color: var(--blue);
+}
+#services button:hover{
+    background-color: transparent;
+    color: var(--blue) !important;
+}
+#services p{
+    display: none;
+}
+
+/* PORTFOLIO SEKCIJA */
+
+.port-button{
+    background-color: var(--blue);
+}
+.port-active{
+    background-color: var(--orange);    
+}
+
+/* KONTAKT SEKCIJA */
+
+textarea{
+    height: 100px;
+}
+
+/* TESTIMONIALS SEKCIJA */
+
+.slick-slide {
+    margin: 0 10px;
+}
+.slick-list {
+    margin: 0 -10px;
+}
+.card p{
+    height: 150px;
+}
+#testimonials-slider img {
+    width: 100%;
+    object-fit: cover;
+}
+.slick-dots{
+    bottom: -50px !important;
+}
+.slick-dots button::before{
+    color: var(--blue) !important;
+    font-size: 20px !important;
+}
+.slick-prev::before, .slick-next:before{
+    font-size: 25px !important;
+    color: var(--blue) !important;
+}
+
+/* FOOTER */
+
+footer{
+    background-color: var(--blue);
+}
+
+/* AUTHOR.HTML */
+
+#author-figure, #author-figure img{
+    width: 300px;
+}
+#author-background{
+    background-image: url("../img/bg-author.jpg");
+    background-size: cover;
+    background-blend-mode: multiply;
+    background-color: rgba(0,0,0,0.8);
+}
+
+/* RESPONSIVE */
+
+@media screen and (max-width: 1200px){
+    #back-to-top{
+        width: calc(2.5rem + 1.5vw);
+        height: calc(2.5rem + 1.5vw);
+    }
+    #back-to-top i{
+        line-height: calc(2.5rem + 1.5vw);
+    }
+}
+@media screen and (min-width: 992px){
+    nav ul{
+        display: block !important;
+    }
+    nav a{
+        line-height: 40px;
+    }
+}
+@media screen and (max-width: 991.98px){
+    header{
+        position: sticky;
+        background-color: var(--blue) !important;
+    }
+    nav ul{
+        padding: 0px;
+        display: none;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    nav ul li{
+        margin: 0px;
+        width: 100%;
+    }
+    nav ul a{
+        margin-top: 10px;
+        text-align: left;
+        width: 100%;
+    }
+    #background h1, #author-background h1{
+        font-size: 50px;
+    }
+    #hamburger{
+        display: block;
+    }
+    .card p{
+        height: 200px;
+    }
+}
+@media screen and (max-width: 767.98px){
+    .card p{
+        height: 160px;
+    }
+    
+}
+@media screen and (max-width: 575.98px){
+    #background h1, #author-background h1{
+        font-size: 30px;
+    }
+    .arrow{
+        font-size: 20px;
+        width: 30px;
+        height: 70px;
+    }
+    #testimonials{
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    .card p{
+        height: 150px;
+    }
+}
+
+
+
