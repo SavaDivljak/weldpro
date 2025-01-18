@@ -1143,26 +1143,7 @@ const socials = [
 ];
 
 dynamicCreating(socials, document.getElementById("footer-socials"),
-    (text) => `<li><a class="strict-white mx-3" href="${text.path}"><i class="${text.icon}"></i></a></li>`
+    (text) => `<li><a class="strict-white mx-3" target="_blank" href="${text.path}"><i class="${text.icon}"></i></a></li>`
 );
 
 // KRAJ ISPISA //
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
