@@ -22,6 +22,9 @@ a{
 li{
     list-style-type: none;
 }
+ul{
+    padding-left: 0px;
+}
 input, textarea, button{
     border: none;
     outline: none;
@@ -261,6 +264,9 @@ nav ul li{
 textarea{
     height: 100px;
 }
+input[type="file"]{
+    width: 100%;
+}
 
 /* TESTIMONIALS SEKCIJA */
 
@@ -332,7 +338,6 @@ footer{
         background-color: var(--blue) !important;
     }
     nav ul{
-        padding: 0px;
         display: none;
         width: 100%;
         margin-bottom: 10px;
