@@ -286,27 +286,27 @@ const navLinks = [
         class: "orange"
     },
     {
-        path: "about",
+        path: "#about",
         name: "About",
         class: "strict-white"
     },
     {
-        path: "services",
+        path: "#services",
         name: "Services",
         class: "strict-white"
     },
     {
-        path: "portfolio",
+        path: "#portfolio",
         name: "Portfolio",
         class: "strict-white"
     },
     {
-        path: "contact",
+        path: "#contact",
         name: "Contact",
         class: "strict-white"
     },
     {
-        path: "testimonials",
+        path: "#testimonials",
         name: "Testimonials",
         class: "strict-white"
     },
@@ -314,7 +314,7 @@ const navLinks = [
 
 dynamicCreating(navLinks, document.getElementById("nav-links"),
     (text) => `<li class="nav-item float-lg-start">
-                    <a class="${text.class} fw-medium text-uppercase nav-link" href="index.html#${text.path}">${text.name}</a>
+                    <a class="${text.class} fw-medium text-uppercase nav-link" href="index.html${text.path}">${text.name}</a>
                </li>`
 );
 
@@ -390,7 +390,7 @@ $("#hamburger").click(function(){
 
 const url = window.location.href;
 
-if(url.indexOf("index.html") != -1){
+if(url.indexOf("author.html") == -1){
 
     // ODGOVARAJUĆI ELEMENTI SE PRIKAZUJU NA SCROLL //
 
