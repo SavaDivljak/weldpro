@@ -1,3 +1,15 @@
+// FUNKCIJE ZA NEOSPOSOBLJAVANJE SKROLA PRILIKOM POJAVE LOADERA/MODALA //
+
+function disableScroll() {
+    document.body.style.overflow = "hidden";
+}
+
+function enableScroll() {
+    document.body.style.overflow = "auto";
+}
+
+disableScroll();
+
 // LOADER I UČITAVANJE MODALA //
 
 const loader = document.getElementById("loader");
@@ -13,9 +25,11 @@ window.addEventListener("load", () => {
 window.addEventListener("transitionend", (e) => {
     if (e.target == loader && e.propertyName == "opacity" && doneLoading) {
         document.body.removeChild(loader);
+        enableScroll();
         setTimeout(() => {
             modalBg.classList.remove("d-none");
             modalBg.classList.add("d-flex");
+            disableScroll();
         }, 5000);
     }
 });
@@ -283,6 +297,7 @@ modalForm.addEventListener("submit", (e) => {
 function closeModal() {
     modalBg.classList.remove("d-flex");
     modalBg.classList.add("d-none");
+    enableScroll();
 }
 
 modalCancel.addEventListener("click", closeModal);
