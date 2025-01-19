@@ -116,36 +116,56 @@ function inputCheck(required, type, regEx, input, small, errMssg, blankMssg) {
             return 0;
         }
     } else if (type == "select") {
-        if (input.value == 0) {
-            inputError(type, input, small);
-            small.innerHTML = blankMssg;
-            return 1;
-        } else {
-            inputSuccess(required, type, input, small);
-            return 0;
-        }
-    } else if (type == "radio") {
-        let radioErr = 0;
-        Array.from(input).forEach((radio) => {
-            if (!radio.checked) {
-                radioErr++;
+        if (required) {
+            if (input.value == 0) {
+                inputError(type, input, small);
+                small.innerHTML = blankMssg;
+                return 1;
+            } else {
+                inputSuccess(required, type, input, small);
+                return 0;
             }
-        });
-        if (radioErr == input.length) {
-            return 1;
-        } else {
-            inputSuccess(required, type, input, small);
-            return 0;
         }
+        else return 0;
+    } else if (type == "radio") {
+        if (required) {
+            let radioErr = 0;
+            Array.from(input).forEach((radio) => {
+                if (!radio.checked) {
+                    radioErr++;
+                }
+            });
+            if (radioErr == input.length) {
+                return 1;
+            } else {
+                inputSuccess(required, type, input, small);
+                return 0;
+            }
+        }
+        else return 0;
     } else if (type == "checkbox") {
-        if (!input.checked) {
-            inputError(type, input, small);
-            small.innerHTML = blankMssg;
-            return 1;
-        } else {
-            inputSuccess(required, type, input, small);
-            return 0;
+        if (required) {
+            if (!input.checked) {
+                inputError(type, input, small);
+                small.innerHTML = blankMssg;
+                return 1;
+            } else {
+                inputSuccess(required, type, input, small);
+                return 0;
+            }
         }
+        else return 0;
+    }
+    else if (type == "file") {
+        if (required) {
+            if (!file) {
+                inputError(type, input, small);
+                small.innerHTML = blankMssg;
+                return 1;
+            }
+            else return 0;
+        }
+        else return 0;
     }
 }
 
@@ -164,7 +184,7 @@ function formEvents(inputs, submit, small) {
                 if (input.touched) input.validate();
                 submitEnabler(inputs, submit, small);
             });
-        } else if (input.type == "checkbox" || input.type == "select") {
+        } else if (input.type == "checkbox" || input.type == "select" || input.type == "file") {
             input.element.addEventListener("change", () => {
                 input.touched = true;
                 if (input.touched) input.validate();
@@ -799,7 +819,7 @@ if(url.indexOf("author.html") == -1){
         },
         {
             name: "tas",
-            text: "I agree with Terms and Services *"
+            text: `I agree with Terms and Services <span class="text-danger">*</span>`
         }
     ];
     
@@ -854,6 +874,8 @@ if(url.indexOf("author.html") == -1){
     const contactSubmit = document.getElementById("contact-submit");
     const contactFormSmall = document.getElementById("small-contact-form");
     const contactSmalls = document.getElementsByClassName("contact-small");
+    const contactCheckBoxNotMandatory = document.getElementById("subscribe-check");
+    const contactFile = document.getElementById("file-input")
 
     const contactInputs = [
         { 
@@ -904,6 +926,20 @@ if(url.indexOf("author.html") == -1){
             touched: false, 
             required: true,
             validate: () => inputCheck(true, "checkbox", "", contactCheckBox, contactCheckBoxSmall, "", "Please accept terms and services.") 
+        },
+        { 
+            element: contactCheckBoxNotMandatory, 
+            type: "checkbox", 
+            touched: false, 
+            required: false,
+            validate: () => inputCheck(false, "checkbox", "", contactCheckBoxNotMandatory, "", "", "") 
+        },
+        { 
+            element: contactFile, 
+            type: "file", 
+            touched: false, 
+            required: false,
+            validate: () => inputCheck(false, "file", "", contactFile, "", "", "") 
         }
     ];    
 
