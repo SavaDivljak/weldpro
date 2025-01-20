@@ -34,7 +34,7 @@ window.addEventListener("transitionend", (e) => {
     }
 });
 
-// BACK TO TOP DUGME ANIMACIJA NA KLIK I NA SKROLOVANJE//
+// BACK TO TOP DUGME ANIMACIJA NA KLIK I NA SKROLOVANJE SA JQUERY//
 
 $("#back-to-top").click(function(){
     $("html").animate({scrollTop: 0}, "fast");
@@ -86,7 +86,7 @@ function inputSuccess(required, type, input, small){
     small.classList.add("invisible");
 }
 
-// ODREĐUJE BOJU IVICE U ZAVISNOSTI KOJI JE REŽIM (DNEVNI/NOĆNI NAMEŠTEN) //
+// ODREĐUJE BOJU IVICE U ZAVISNOSTI KOJI JE REŽIM (SVETLI/TAMNI) NAMEŠTEN //
 
 function dayNightInputModifier(input){ 
     input.classList.remove("border-danger", "border-success");
@@ -430,7 +430,7 @@ toggler.addEventListener("click", () => {
     }
 });
 
-// HAMBURGER U MANJIM REZOLUCIJAMA KLIKOM POKAZUJE MENI //
+// HAMBURGER U MANJIM REZOLUCIJAMA KLIKOM POKAZUJE MENI SA JQUERY //
 
 $("#hamburger").click(function(){
     if ($("nav ul").is(":visible")) {
@@ -447,15 +447,15 @@ const url = window.location.href;
 
 if(url.indexOf("author.html") == -1){
 
-    // ODGOVARAJUĆI ELEMENTI SE PRIKAZUJU NA SCROLL //
+    // ODGOVARAJUĆI ELEMENTI SE PRIKAZUJU NA SCROLL SA JQUERY //
 
-    $(window).scroll(function() {
+    $(window).scroll(function () {
         let pageBottom = $(window).scrollTop() + $(window).height();
-        $(".fade-in").each(function() {
+        $(".fade-in").each(function () {
             let divTop = $(this).offset().top + $(this).outerHeight();
             let divHeight = $(this).height();
-            if (pageBottom > divTop - divHeight) {
-                $(this).addClass('fade-in-after');
+            if (pageBottom > divTop - divHeight && $(this).css("opacity") == 0 && $(this).css("top") == "-30px") {
+                $(this).animate({ opacity: 1, top : 0 }, 700);
             }
         });
     });
@@ -514,15 +514,11 @@ if(url.indexOf("author.html") == -1){
                 </button>`
     );
 
-    // D.I. DUGMAD U POMENUTOJ SEKCIJI (BEZ F-JE NAPRAVLJENI) //
+    // D.I. DUGMAD U POMENUTOJ SEKCIJI //
 
-    let dotsWrite = "";
-
-    for (let i = 0; i < 3; i++) {
-        dotsWrite += `<div id="dot${i + 1}" class="dot rounded-circle"></div>`;
-    }
-
-    document.getElementById("dots").innerHTML += dotsWrite;  
+    dynamicCreating(Array.from({ length: 3 }), document.getElementById("dots"),
+        (_, index) => `<div id="dot${index + 1}" class="dot rounded-circle"></div>`
+    );
     
     // POČETAK FUNCKIONALNOSTI CAROUSELA U POMENUTOJ SEKCIJI //
     
@@ -536,7 +532,6 @@ if(url.indexOf("author.html") == -1){
     function showBgSlide(index) {
         Array.from(bgSlides).forEach((slide) => (slide.style.display = "none"));
         Array.from(dotButtons).forEach((dot) => dot.classList.remove("dot-active"));
-
         bgSlides[index - 1].style.display = "flex";
         dotButtons[index - 1].classList.add("dot-active");
     }
@@ -633,7 +628,7 @@ if(url.indexOf("author.html") == -1){
                     </li>` 
     );
 
-    // TEKST SE PRIKAZUJE/SKLANJA KLIKOM NA PITANJE U POMENUTOJ SEKCIJI //  
+    // TEKST SE PRIKAZUJE/SKLANJA KLIKOM NA PITANJE U POMENUTOJ SEKCIJI SA JQUERY //  
     
     $("#qandas").on("click", "li", function() {
         const answer = $(this).find("p").first();   
@@ -733,7 +728,7 @@ if(url.indexOf("author.html") == -1){
                 </div>`
     );
 
-    // TEKST SE PRIKAZUJE/SKLANJA KLIKOM NA DUGME U POMENUTOJ SEKCIJI //
+    // TEKST SE PRIKAZUJE/SKLANJA KLIKOM NA DUGME U POMENUTOJ SEKCIJI SA JQUERY //
 
     $("#services button").click(function() {
         if ($(this).html() == "Show more") {
@@ -777,7 +772,7 @@ if(url.indexOf("author.html") == -1){
     const portButtonElements = document.getElementsByClassName("port-button");
     portButtonElements[0].classList.add("port-active");
 
-    // KLIKOM NA DUGME PRIKAZUJU SE SLIKE ODGOVARAJUĆE VRSTE U POMENUTOJ SEKCIJI //
+    // KLIKOM NA DUGME PRIKAZUJU SE SLIKE ODGOVARAJUĆE VRSTE U POMENUTOJ SEKCIJI SA JQUERY //
 
     $(".port-button").click(function () {
         $(".port-active").removeClass("port-active");

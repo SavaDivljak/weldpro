@@ -46,7 +46,6 @@ input:focus, textarea:focus, button:focus, select:focus{
     opacity: 0;
     position: relative;
     top: -30px;
-    transition: opacity .7s ease-in, top .7s ease-in;
 }
 .fade-in-after{
     opacity: 1;
@@ -60,6 +59,7 @@ input:focus, textarea:focus, button:focus, select:focus{
 }
 
 /* LOADER */
+
 #spinner{
     border: 15px solid #bababa;
     width: 100px;
@@ -85,6 +85,7 @@ input:focus, textarea:focus, button:focus, select:focus{
 }
 
 /* BACK TO TOP */
+
 #back-to-top{
     width: 4rem;
     height: 4rem;
@@ -102,6 +103,7 @@ input:focus, textarea:focus, button:focus, select:focus{
 }
 
 /* MODAL */
+
 #modal button{
     top: 10px;
     left: 90%;
@@ -112,6 +114,7 @@ input:focus, textarea:focus, button:focus, select:focus{
 }
 
 /* HEADER */
+
 header{
     background-color: rgba(0,0,0,0.3);
     position: fixed;
@@ -155,6 +158,7 @@ nav ul li{
 }
 
 /* BACKGROUND SEKCIJA */
+
 #background h1, #author-background h1{
     font-size: 70px;
 }
@@ -212,6 +216,7 @@ nav ul li{
 }
 
 /* ABOUT SEKCIJA */
+
 #qandas h5{
     cursor: pointer;
 }  
@@ -228,6 +233,7 @@ nav ul li{
 }    
 
 /* SERVISI SEKCIJA */
+
 #services img{
     height: 50px;
 }
@@ -244,6 +250,7 @@ nav ul li{
 }
 
 /* PORTFOLIO SEKCIJA */
+
 .port-button{
     background-color: var(--blue);
 }
@@ -252,11 +259,13 @@ nav ul li{
 }
 
 /* KONTAKT SEKCIJA */
+
 textarea{
     height: 100px;
 }
 
 /* TESTIMONIALS SEKCIJA */
+
 .slick-slide {
     margin: 0 10px;
 }
@@ -283,11 +292,13 @@ textarea{
 }
 
 /* FOOTER */
+
 footer{
     background-color: var(--blue);
 }
 
 /* AUTHOR.HTML */
+
 #author-figure, #author-figure img{
     width: 300px;
 }
@@ -299,6 +310,7 @@ footer{
 }
 
 /* RESPONSIVE */
+
 @media screen and (max-width: 1200px){
     #back-to-top{
         width: calc(2.5rem + 1.5vw);
