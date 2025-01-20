@@ -1,4 +1,16 @@
-// LOADER //
+// FUNKCIJE ZA NEOSPOSOBLJAVANJE SKROLA PRILIKOM POJAVE LOADERA/MODALA //
+
+function disableScroll() {
+    document.body.style.overflow = "hidden";
+}
+
+function enableScroll() {
+    document.body.style.overflow = "auto";
+}
+
+disableScroll();
+
+// LOADER I UČITAVANJE MODALA //
 
 const loader = document.getElementById("loader");
 let doneLoading = false;
@@ -13,14 +25,16 @@ window.addEventListener("load", () => {
 window.addEventListener("transitionend", (e) => {
     if (e.target == loader && e.propertyName == "opacity" && doneLoading) {
         document.body.removeChild(loader);
+        enableScroll();
         setTimeout(() => {
             modalBg.classList.remove("d-none");
             modalBg.classList.add("d-flex");
+            disableScroll();
         }, 5000);
     }
 });
 
-// BACK TO TOP DUGME ANIMACIJA NA KLIK I NA SKROLOVANJE//
+// BACK TO TOP DUGME ANIMACIJA NA KLIK I NA SKROLOVANJE SA JQUERY//
 
 $("#back-to-top").click(function(){
     $("html").animate({scrollTop: 0}, "fast");
@@ -46,7 +60,9 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// F-JA ZA PROVERU VALIDNOSTI PODATAKA NA FORMI //
+// POČETAK KODA ZA PROVERU VALIDNOSTI PODATAKA NA FORMI //
+
+// ISPIS GREŠKE //
 
 function inputError(type, input, small){
     if (type == "input" || type == "select") {
@@ -56,6 +72,8 @@ function inputError(type, input, small){
     small.classList.remove("invisible");
     small.classList.add("visible"); 
 }
+
+// ISPIS USPEHA //
 
 function inputSuccess(required, type, input, small){ 
     if (type == "input" || type == "select") {  
@@ -68,11 +86,15 @@ function inputSuccess(required, type, input, small){
     small.classList.add("invisible");
 }
 
+// ODREĐUJE BOJU IVICE U ZAVISNOSTI KOJI JE REŽIM (SVETLI/TAMNI) NAMEŠTEN //
+
 function dayNightInputModifier(input){ 
     input.classList.remove("border-danger", "border-success");
     if(togglerFlag == "day") input.classList.add("border-secondary");
     else if(togglerFlag == "night") input.classList.add("border-light");
 }
+
+// PROVERA VALIDNOSTI PODATAKA U FORMI //
 
 function inputCheck(required, type, regEx, input, small, errMssg, blankMssg) {
     if (type == "input") {
@@ -94,38 +116,60 @@ function inputCheck(required, type, regEx, input, small, errMssg, blankMssg) {
             return 0;
         }
     } else if (type == "select") {
-        if (input.value == 0) {
-            inputError(type, input, small);
-            small.innerHTML = blankMssg;
-            return 1;
-        } else {
-            inputSuccess(required, type, input, small);
-            return 0;
-        }
-    } else if (type == "radio") {
-        let radioErr = 0;
-        Array.from(input).forEach((radio) => {
-            if (!radio.checked) {
-                radioErr++;
+        if (required) {
+            if (input.value == 0) {
+                inputError(type, input, small);
+                small.innerHTML = blankMssg;
+                return 1;
+            } else {
+                inputSuccess(required, type, input, small);
+                return 0;
             }
-        });
-        if (radioErr == input.length) {
-            return 1;
-        } else {
-            inputSuccess(required, type, input, small);
-            return 0;
         }
+        else return 0;
+    } else if (type == "radio") {
+        if (required) {
+            let radioErr = 0;
+            Array.from(input).forEach((radio) => {
+                if (!radio.checked) {
+                    radioErr++;
+                }
+            });
+            if (radioErr == input.length) {
+                return 1;
+            } else {
+                inputSuccess(required, type, input, small);
+                return 0;
+            }
+        }
+        else return 0;
     } else if (type == "checkbox") {
-        if (!input.checked) {
-            inputError(type, input, small);
-            small.innerHTML = blankMssg;
-            return 1;
-        } else {
-            inputSuccess(required, type, input, small);
-            return 0;
+        if (required) {
+            if (!input.checked) {
+                inputError(type, input, small);
+                small.innerHTML = blankMssg;
+                return 1;
+            } else {
+                inputSuccess(required, type, input, small);
+                return 0;
+            }
         }
+        else return 0;
+    }
+    else if (type == "file") {
+        if (required) {
+            if (!file) {
+                inputError(type, input, small);
+                small.innerHTML = blankMssg;
+                return 1;
+            }
+            else return 0;
+        }
+        else return 0;
     }
 }
+
+// DOGAĐAJI TOKOM POPUNJAVANJA ELEMENATA FORME //
 
 function formEvents(inputs, submit, small) {
     inputs.forEach((input) => {
@@ -140,7 +184,7 @@ function formEvents(inputs, submit, small) {
                 if (input.touched) input.validate();
                 submitEnabler(inputs, submit, small);
             });
-        } else if (input.type == "checkbox" || input.type == "select") {
+        } else if (input.type == "checkbox" || input.type == "select" || input.type == "file") {
             input.element.addEventListener("change", () => {
                 input.touched = true;
                 if (input.touched) input.validate();
@@ -157,6 +201,8 @@ function formEvents(inputs, submit, small) {
         }
     });
 }
+
+// OSPOSOBLJAVA SUBMIT DUGME AKO JE SVE LEPO POPUNJENO //
 
 function submitEnabler(inputs, submit, small) {
     let allValid = true;
@@ -187,6 +233,8 @@ function submitEnabler(inputs, submit, small) {
     }
 }
 
+// DOGAĐAJ NA SUBMIT FORME //
+
 function submited(form, small) {
     form.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -194,6 +242,8 @@ function submited(form, small) {
         small.classList.add("visible");
     }); 
 }
+
+// DOGAĐAJ NA RESET FORME //
 
 function resetForm(form, inputs, smalls, smallForm, submit) {
     form.addEventListener("reset", () => {
@@ -224,6 +274,8 @@ function resetForm(form, inputs, smalls, smallForm, submit) {
     });
 }
 
+// KRAJ KODA ZA PROVERU VALIDNOSTI PODATAKA NA FORMI //
+
 // POČETAK KODA SA FUNKCIONALNOSTIMA MODALA //
 
 const modalBg = document.getElementById("modal-bg");
@@ -251,6 +303,8 @@ formEvents(modalInputs, modalSubmit, modalFormSmall);
 submitEnabler(modalInputs, modalSubmit, modalFormSmall); 
 submited(modalForm, modalFormSmall);
 
+// MODAL SE ZATVARA 3 SEKUNDE NAKON SUBMITA //
+
 modalForm.addEventListener("submit", (e) => { 
     e.preventDefault();
     modalFormSmall.classList.remove("invisible");
@@ -258,12 +312,13 @@ modalForm.addEventListener("submit", (e) => {
     setTimeout(closeModal, 3000);
 });
 
+// MODAL SE ZATVARA KLIKOM NA CANCEL DUGME (X) //
+
 function closeModal() {
     modalBg.classList.remove("d-flex");
     modalBg.classList.add("d-none");
+    enableScroll();
 }
-
-// MODAL SE ZATVARA KLIKOM NA CANCEL DUGME (X) //
 
 modalCancel.addEventListener("click", closeModal);
 
@@ -375,7 +430,7 @@ toggler.addEventListener("click", () => {
     }
 });
 
-// HAMBURGER U MANJIM REZOLUCIJAMA KLIKOM POKAZUJE MENI //
+// HAMBURGER U MANJIM REZOLUCIJAMA KLIKOM POKAZUJE MENI SA JQUERY //
 
 $("#hamburger").click(function(){
     if ($("nav ul").is(":visible")) {
@@ -392,15 +447,15 @@ const url = window.location.href;
 
 if(url.indexOf("author.html") == -1){
 
-    // ODGOVARAJUĆI ELEMENTI SE PRIKAZUJU NA SCROLL //
+    // ODGOVARAJUĆI ELEMENTI SE PRIKAZUJU NA SCROLL SA JQUERY //
 
-    $(window).scroll(function() {
+    $(window).scroll(function () {
         let pageBottom = $(window).scrollTop() + $(window).height();
-        $(".fade-in").each(function() {
+        $(".fade-in").each(function () {
             let divTop = $(this).offset().top + $(this).outerHeight();
             let divHeight = $(this).height();
-            if (pageBottom > divTop - divHeight) {
-                $(this).addClass('fade-in-after');
+            if (pageBottom > divTop - divHeight && $(this).css("opacity") == 0 && $(this).css("top") == "-30px") {
+                $(this).animate({ opacity: 1, top : 0 }, 700);
             }
         });
     });
@@ -459,15 +514,11 @@ if(url.indexOf("author.html") == -1){
                 </button>`
     );
 
-    // D.I. DUGMAD U POMENUTOJ SEKCIJI (BEZ F-JE NAPRAVLJENI) //
+    // D.I. DUGMAD U POMENUTOJ SEKCIJI //
 
-    let dotsWrite = "";
-
-    for (let i = 0; i < 3; i++) {
-        dotsWrite += `<div id="dot${i + 1}" class="dot rounded-circle"></div>`;
-    }
-
-    document.getElementById("dots").innerHTML += dotsWrite;  
+    dynamicCreating(Array.from({ length: 3 }), document.getElementById("dots"),
+        (_, index) => `<div id="dot${index + 1}" class="dot rounded-circle"></div>`
+    );
     
     // POČETAK FUNCKIONALNOSTI CAROUSELA U POMENUTOJ SEKCIJI //
     
@@ -481,7 +532,6 @@ if(url.indexOf("author.html") == -1){
     function showBgSlide(index) {
         Array.from(bgSlides).forEach((slide) => (slide.style.display = "none"));
         Array.from(dotButtons).forEach((dot) => dot.classList.remove("dot-active"));
-
         bgSlides[index - 1].style.display = "flex";
         dotButtons[index - 1].classList.add("dot-active");
     }
@@ -578,7 +628,7 @@ if(url.indexOf("author.html") == -1){
                     </li>` 
     );
 
-    // TEKST SE PRIKAZUJE/SKLANJA KLIKOM NA PITANJE U POMENUTOJ SEKCIJI //  
+    // TEKST SE PRIKAZUJE/SKLANJA KLIKOM NA PITANJE U POMENUTOJ SEKCIJI SA JQUERY //  
     
     $("#qandas").on("click", "li", function() {
         const answer = $(this).find("p").first();   
@@ -620,7 +670,7 @@ if(url.indexOf("author.html") == -1){
                     </div>` 
     );
 
-    // JQUERY PLUGIN ISPIS BROJEVA U COUNTER BLOCKOVIMA //
+    // JQUERY PLUGIN COUNTO ISPIS BROJEVA U COUNTER BLOCKOVIMA //
 
     $(document).ready(function () {
         $(window).scroll(function() {
@@ -678,7 +728,7 @@ if(url.indexOf("author.html") == -1){
                 </div>`
     );
 
-    // TEKST SE PRIKAZUJE/SKLANJA KLIKOM NA DUGME U POMENUTOJ SEKCIJI //
+    // TEKST SE PRIKAZUJE/SKLANJA KLIKOM NA DUGME U POMENUTOJ SEKCIJI SA JQUERY //
 
     $("#services button").click(function() {
         if ($(this).html() == "Show more") {
@@ -722,7 +772,7 @@ if(url.indexOf("author.html") == -1){
     const portButtonElements = document.getElementsByClassName("port-button");
     portButtonElements[0].classList.add("port-active");
 
-    // KLIKOM NA DUGME PRIKAZUJU SE SLIKE ODGOVARAJUĆE VRSTE U POMENUTOJ SEKCIJI //
+    // KLIKOM NA DUGME PRIKAZUJU SE SLIKE ODGOVARAJUĆE VRSTE U POMENUTOJ SEKCIJI SA JQUERY //
 
     $(".port-button").click(function () {
         $(".port-active").removeClass("port-active");
@@ -764,7 +814,7 @@ if(url.indexOf("author.html") == -1){
         },
         {
             name: "tas",
-            text: "I agree with Terms and Services *"
+            text: `I agree with Terms and Services <span class="text-danger">*</span>`
         }
     ];
     
@@ -819,6 +869,8 @@ if(url.indexOf("author.html") == -1){
     const contactSubmit = document.getElementById("contact-submit");
     const contactFormSmall = document.getElementById("small-contact-form");
     const contactSmalls = document.getElementsByClassName("contact-small");
+    const contactCheckBoxNotMandatory = document.getElementById("subscribe-check");
+    const contactFile = document.getElementById("file-input")
 
     const contactInputs = [
         { 
@@ -869,6 +921,20 @@ if(url.indexOf("author.html") == -1){
             touched: false, 
             required: true,
             validate: () => inputCheck(true, "checkbox", "", contactCheckBox, contactCheckBoxSmall, "", "Please accept terms and services.") 
+        },
+        { 
+            element: contactCheckBoxNotMandatory, 
+            type: "checkbox", 
+            touched: false, 
+            required: false,
+            validate: () => inputCheck(false, "checkbox", "", contactCheckBoxNotMandatory, "", "", "") 
+        },
+        { 
+            element: contactFile, 
+            type: "file", 
+            touched: false, 
+            required: false,
+            validate: () => inputCheck(false, "file", "", contactFile, "", "", "") 
         }
     ];    
 
@@ -985,13 +1051,17 @@ if(url.indexOf("author.html") == -1){
 
 // KRAJ KODA KOJI NE TREBA DA SE IZVRŠI U AUTHOR.HTML //
 
-// D.I. FOOTERA //
+// POČETAK D.I. FOOTERA //
+
+// ISPIS REDOVA U FOOTERU //
 
 const footerRows = ["footer-content", "footer-end"];
 
 dynamicCreating(footerRows, document.querySelector("footer"),
     (text) => `<div id="${text}" class="row pb-2"></div>`
 );
+
+// ISPIS BLOKOVA U PRVOM REDU FOOTERA //
 
 const footerContentBlocks = [
     {
@@ -1019,15 +1089,21 @@ dynamicCreating(footerContentBlocks, document.getElementById("footer-content"),
                 </div>`
 );    
 
+// ISPIS NAVIGACIJE U FOOTERU //
+
 dynamicCreating(navLinks, document.getElementById("footer-navigation"),
     (text) => `<li class="nav-item"><a href="index.html#${text.path}" class="nav-link my-2">${text.name}</a></li>`
 );
+
+// ISPIS SERVISA U FOOTERU //
 
 const footerServices = ["Home", "Gate", "Window", "Machine", "Bike", "Car"]
 
 dynamicCreating(footerServices, document.getElementById("footer-services"),
     (text) => `<li class="my-2">${text} welding</li>`
 ); 
+
+// ISPIS KONTAKT PODATAKA U FOOTERU //
 
 const footerContact = [
     {
@@ -1048,6 +1124,8 @@ dynamicCreating(footerContact, document.getElementById("footer-contact"),
     (text) => `<li class="my-2"><i class="fa-solid fa-${text.icon}"></i>&nbsp;&nbsp;${text.text}</li>`
 ); 
 
+// ISPIS KORISNIH LINKOVA U FOOTERU //
+
 const usefulLinks = [
     {
         path: "dokumentacija.pdf",
@@ -1067,6 +1145,8 @@ dynamicCreating(usefulLinks, document.getElementById("footer-useful-links"),
     (text) => `<li class="my-2"><a class="strict-white" href="${text.path}">${text.name}</a></li>`
 ); 
 
+// ISPIS BLOKOVA U DRUGOM REDU FOOTERA //
+
 const footerEndBlocks = [`<ul class="m-0 pt-5 d-flex justify-content-center" id="footer-socials"></ul>`, '<p id="copyright" class="strict-white pt-5 m-0"></p>'];
 
 dynamicCreating(footerEndBlocks, document.getElementById("footer-end"),
@@ -1083,7 +1163,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("copyright").innerHTML = `&copy; ${year} WeldPro. All right reserved.`;
 });
 
-// KRAJ ISPISA //
+// ISPIS IKONICA DRUŠTVENIH MREŽA U FOOTERU //
 
 const socials = [
     {
@@ -1109,24 +1189,7 @@ const socials = [
 ];
 
 dynamicCreating(socials, document.getElementById("footer-socials"),
-    (text) => `<li><a class="strict-white mx-3" href="${text.path}"><i class="${text.icon}"></i></a></li>`
+    (text) => `<li><a class="strict-white mx-3" target="_blank" href="${text.path}"><i class="${text.icon}"></i></a></li>`
 );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// KRAJ ISPISA //
