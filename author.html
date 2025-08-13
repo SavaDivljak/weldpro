@@ -33,12 +33,12 @@
 
         <!-- MOJ CSS -->
 
-        <link rel="stylesheet" href="assets/css/style.css" type="text/css"/>
+        <link rel="stylesheet" href="assets/css/style-min.css" type="text/css"/>
 
         <!-- SLICK JQUERY PLUGIN CSS -->
 
-        <link rel="stylesheet" href="assets\slick\slick\slick.css" type="text/css"/>
-        <link rel="stylesheet" href="assets\slick\slick\slick-theme.css" type="text/css"/>
+        <link rel="stylesheet" href="assets\plugin\slick\slick\slick.css" type="text/css"/>
+        <link rel="stylesheet" href="assets\plugin\slick\slick\slick-theme.css" type="text/css"/>
     </head>
     <body>
 
@@ -50,19 +50,22 @@
 
         <!-- BACK TO TOP DUGME -->
 
-        <div id="back-to-top" class="strict-white shadow position-fixed rounded-circle text-center m-4 bottom-0 end-0"><i class="fa-solid fa-arrow-up fs-1 fw-bold"></i></div>
+        <div id="back-to-top" class="strict-white shadow position-fixed rounded-circle text-center m-4 bottom-0 end-0"><i class="fa-solid fa-chevron-up fs-1 fw-bold"></i></div>
         
         <!-- MODAL -->
 
-        <div id="modal-bg" class="z-3 d-none vw-100 vh-100 position-fixed top-0 start-0 d-flex justify-content-center align-items-center">
+         <div id="modal-bg" class="z-3 d-none vw-100 vh-100 position-fixed top-0 start-0 d-flex justify-content-center align-items-center">
             <div id="modal" class="border border-secondary rounded bg-dark-subtle col-lg-6 col-sm-8 col-11 d-flex flex-wrap flex-column justify-content-center align-items-center">
-                <div class="w-100"><button type="button" class="border border-0 fw-bold bg-dark-subtle fs-1 text-dark position-relative"><i class="fa-solid fa-x"></i></button></div>
-                <h1 class="text-center mx-5 mt-1 mb-5 fs-1 fw-bold text-dark">Subscribe to our newsletter</h1>
+                <div class="w-100"><button type="button" id="modal-x" class="close-modal border border-0 fw-bold bg-dark-subtle fs-1 text-dark position-relative"><i class="fa-solid fa-x"></i></button></div>
+                <h2 class="mx-5 mt-1 mb-5">Subscribe to our newsletter</h2>
                 <form action="index.php" method="POST" class="mt-5 w-100 d-flex flex-wrap flex-column justify-content-center align-items-center">
                     <label class="fs-5 text-dark" for="modal-email">Enter your email:</label>
                     <input class="rounded my-1 w-75 p-1 border border-2 border-secondary" type="text" id="modal-email" name="modal-email" placeholder="Ex: jonjonson@gmail.com"/>
-                    <small id="modal-input-small" class="invisible text-danger">Invalid email format</small>
-                    <input type="submit" disabled id="modal-submit" name="modal-submit" value="SUBMIT" class="disabled strict-white rounded py-1 px-2 my-1"/>
+                    <small id="modal-input-small" class="invisible text-danger">Email must contain @ and .</small>
+                    <div class="w-100 d-flex justify-content-center">
+                        <input type="submit" id="modal-submit" name="modal-submit" value="SUBMIT" class="strict-white rounded py-1 px-2 my-1 mx-2"/>
+                        <button type="button" id="modal-cancel" class="close-modal strict-white rounded py-1 px-2 my-1 mx-2">CANCEL</button>  
+                    </div>
                     <small id="modal-form-small" class="invisible text-success mb-3">Successfuly submited, please wait...</small>
                 </form>
             </div>
@@ -80,7 +83,7 @@
 
         <!-- MAIN POČETAK -->
 
-        <main class="w-100 bg-light bg-gradient">
+        <main class="w-100 bg-light">
 
             <!-- BACKGROUND SEKCIJA -->
 
@@ -91,9 +94,9 @@
             <!-- AUTOR SADRŽAJ SEKCIJA -->
 
             <section id="author-content" class="w-100 py-5">
-                <h2 class="fs-1 text-center text-dark">Author of this website</h2>
-                <figure id="author-figure" class="my-5 mx-auto">
-                    <img class="rounded" src="assets/img/author.JPG" alt="Author of this website"/>
+                <h2>Author of <span class="orange">this website</span></h2>
+                <figure id="author-figure" class="my-5 mx-auto fade-in">
+                    <img class="rounded border border-secondary" src="assets/img/author.JPG" alt="Author of this website"/>
                     <figcaption class="text-dark text-center">Aleksa Savić 5/22</figcaption>
                 </figure>
             </section>
@@ -109,16 +112,12 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-        <!-- COUNTO JQUERY PLUGIN -->
-
-        <script src="assets/number-counting/dist/counto.min.js"></script>
-
         <!-- SLICK JQUERY PLUGIN -->
          
-        <script src="assets\slick\slick\slick.min.js"></script>
+        <script src="assets\plugin\slick\slick\slick.min.js"></script>
 
         <!-- MOJ JS -->
          
-        <script src="assets/js/main.js"></script>
+        <script src="assets/js/main-min.js"></script>
     </body>
 </html>

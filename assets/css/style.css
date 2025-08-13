@@ -6,7 +6,6 @@
 :root{
     --blue: #1F4E79;
     --orange: #FF6F00;
-    --gray: #4E4E50;
 }
 html{
     scroll-behavior: smooth;
@@ -46,6 +45,11 @@ input:focus, textarea:focus, button:focus, select:focus{
     opacity: 0;
     position: relative;
     top: -30px;
+    transition: opacity .7s ease-in, top .7s ease-in;
+}
+.fade-in-after{
+    opacity: 1;
+    top: 0px;
 }
 .fade-in-after{
     opacity: 1;
@@ -55,13 +59,13 @@ input:focus, textarea:focus, button:focus, select:focus{
     background-color: var(--blue);
 }
 .disabled{
-    background-color: var(--gray);
+    background-color: #4E4E50;
 }
 
 /* LOADER */
 
 #spinner{
-    border: 15px solid #bababa;
+    border: 15px solid #C0C0C0;
     width: 100px;
     height: 100px;
     border-top-color: var(--orange);
@@ -104,10 +108,16 @@ input:focus, textarea:focus, button:focus, select:focus{
 
 /* MODAL */
 
-#modal button{
+#modal-x{
     top: 10px;
     left: 90%;
     cursor: pointer;
+}
+#modal-cancel{
+    background-color: var(--blue);
+}   
+#modal i:hover{
+    color: #dc3545;
 }
 #modal-bg{
     background-color: rgba(0,0,0,0.5);
@@ -184,7 +194,7 @@ nav ul li{
     background-color: transparent;
     top: calc(50% - 50px);
 }
-.arrow:hover, .arrow:focus{
+.arrow:hover{
     background-color: rgba(218, 116, 38, 0.8);
 }
 #previous{
@@ -217,7 +227,7 @@ nav ul li{
 
 /* ABOUT SEKCIJA */
 
-#qandas h5{
+#qandas h3{
     cursor: pointer;
 }  
 #qandas p{
@@ -283,12 +293,12 @@ textarea{
     bottom: -50px !important;
 }
 .slick-dots button::before{
-    color: var(--blue) !important;
+    color: var(--orange) !important;
     font-size: 20px !important;
 }
 .slick-prev::before, .slick-next:before{
     font-size: 25px !important;
-    color: var(--blue) !important;
+    color: var(--orange) !important;
 }
 
 /* FOOTER */
@@ -378,8 +388,5 @@ footer{
     }
     .card p{
         height: 150px;
-    }
-    input[type="file"]{
-        width: 100%;
     }
 }

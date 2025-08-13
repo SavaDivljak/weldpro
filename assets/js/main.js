@@ -1,4 +1,4 @@
-// FUNKCIJE ZA NEOSPOSOBLJAVANJE SKROLA PRILIKOM POJAVE LOADERA/MODALA //
+// FUNKCIJE ZA ONESPOSOBLJAVANJE SKROLA PRILIKOM POJAVE LOADERA/MODALA //
 
 function disableScroll() {
     document.body.style.overflow = "hidden";
@@ -16,14 +16,14 @@ const loader = document.getElementById("loader");
 let doneLoading = false;
 
 window.addEventListener("load", () => {
-    setTimeout(() => {
+    setTimeout(() => { 
         loader.classList.add("loader-done");
         doneLoading = true;
     }, 3000);
 });
 
 window.addEventListener("transitionend", (e) => {
-    if (e.target == loader && e.propertyName == "opacity" && doneLoading) {
+    if (e.target === loader && e.propertyName === "opacity" && doneLoading) {
         document.body.removeChild(loader);
         enableScroll();
         setTimeout(() => {
@@ -65,7 +65,7 @@ window.addEventListener('scroll', () => {
 // ISPIS GREŠKE //
 
 function inputError(type, input, small){
-    if (type == "input" || type == "select") {
+    if (type === "input" || type === "select") {
         input.classList.remove("border-success", "border-secondary", "border-light");
         input.classList.add("border-danger");
     }
@@ -76,7 +76,7 @@ function inputError(type, input, small){
 // ISPIS USPEHA //
 
 function inputSuccess(required, type, input, small){ 
-    if (type == "input" || type == "select") {  
+    if (type === "input" || type === "select") {  
         input.classList.remove("border-danger", "border-light", "border-secondary");
         if(!required){
             dayNightInputModifier(input);    
@@ -90,82 +90,71 @@ function inputSuccess(required, type, input, small){
 
 function dayNightInputModifier(input){ 
     input.classList.remove("border-danger", "border-success");
-    if(togglerFlag == "day") input.classList.add("border-secondary");
-    else if(togglerFlag == "night") input.classList.add("border-light");
+    switch(togglerFlag) {
+        case "day": input.classList.add("border-secondary"); break;
+        case "night": input.classList.add("border-light"); break;
+    }
+}
+
+
+// INICIJALIZACIJA ELEMENATA FORME //
+
+function initializeInputs(inputs) {
+    inputs.forEach((input) => {
+        input.touched = false;
+        input.validate = () => inputCheck(input);
+    });
 }
 
 // PROVERA VALIDNOSTI PODATAKA U FORMI //
 
-function inputCheck(required, type, regEx, input, small, errMssg, blankMssg) {
-    if (type == "input") {
-        if (!regEx.test(input.value) && input.value.trim() != "") {
-            inputError(type, input, small);
-            small.innerHTML = errMssg;
-            return 1;
-        } else if (input.value.trim() == "") {
-            if (required) {
-                inputError(type, input, small);
-                small.innerHTML = blankMssg;
-                return 1;
-            } else {
-                inputSuccess(required, type, input, small);
-                return 0;
-            }
-        } else {
-            inputSuccess(required, type, input, small);
-            return 0;
-        }
-    } else if (type == "select") {
-        if (required) {
-            if (input.value == 0) {
-                inputError(type, input, small);
-                small.innerHTML = blankMssg;
-                return 1;
-            } else {
-                inputSuccess(required, type, input, small);
-                return 0;
-            }
-        }
-        else return 0;
-    } else if (type == "radio") {
-        if (required) {
-            let radioErr = 0;
-            Array.from(input).forEach((radio) => {
-                if (!radio.checked) {
-                    radioErr++;
+function inputCheck(input) {
+    switch(input.type) {
+        case "input":
+            if (!input.regEx.test(input.element.value) && input.element.value.trim() !== "") {
+                inputError(input.type, input.element, input.small);
+                input.small.innerHTML = input.errMssg;
+                return false;
+            } else if (input.element.value.trim() === "") {
+                if (input.required) {
+                    inputError(input.type, input.element, input.small);
+                    input.small.innerHTML = input.blankMssg;
+                    return false;
+                } else {
+                    inputSuccess(input.required, input.type, input.element, input.small);
+                    return true;
                 }
-            });
-            if (radioErr == input.length) {
-                return 1;
             } else {
-                inputSuccess(required, type, input, small);
-                return 0;
+                inputSuccess(input.required, input.type, input.element, input.small);
+                return true;
             }
-        }
-        else return 0;
-    } else if (type == "checkbox") {
-        if (required) {
-            if (!input.checked) {
-                inputError(type, input, small);
-                small.innerHTML = blankMssg;
-                return 1;
+
+        case "select":
+            if (input.required && input.element.value === "0") {
+                inputError(input.type, input.element, input.small);
+                input.small.innerHTML = input.blankMssg;
+                return false;
             } else {
-                inputSuccess(required, type, input, small);
-                return 0;
+                inputSuccess(input.required, input.type, input.element, input.small);
+                return true;
             }
-        }
-        else return 0;
-    }
-    else if (type == "file") {
-        if (required) {
-            if (!file) {
-                inputError(type, input, small);
-                small.innerHTML = blankMssg;
-                return 1;
+
+        case "radio":
+            if (input.required) {
+                const uncheckedRadios = Array.from(input.element).filter(radio => !radio.checked);
+                if (uncheckedRadios.length === input.element.length) return false;
+                else return true;
+            } else return true;
+
+        case "checkbox":
+            if (input.required && !input.element.checked) {
+                inputError(input.type, input.element, input.small);
+                input.small.innerHTML = input.blankMssg;
+                return false;
+            } else {
+                inputSuccess(input.required, input.type, input.element, input.small);
+                return true;
             }
-            else return 0;
-        }
-        else return 0;
     }
 }
 
@@ -173,31 +162,28 @@ function inputCheck(required, type, regEx, input, small, errMssg, blankMssg) {
 
 function formEvents(inputs, submit, small) {
     inputs.forEach((input) => {
-        if (input.type == "input") {
-            input.element.addEventListener("blur", () => {
-                input.touched = true;
-                if (input.touched) input.validate();
-                submitEnabler(inputs, submit, small);
-            });
-            input.element.addEventListener("keyup", () => {
-                input.touched = true;
-                if (input.touched) input.validate();
-                submitEnabler(inputs, submit, small);
-            });
-        } else if (input.type == "checkbox" || input.type == "select" || input.type == "file") {
-            input.element.addEventListener("change", () => {
-                input.touched = true;
-                if (input.touched) input.validate();
-                submitEnabler(inputs, submit, small);
-            });
-        } else if (input.type == "radio") {
-            Array.from(input.element).forEach((radio) => {
-                radio.addEventListener("change", () => {
-                    input.touched = true;
-                    if (input.touched) input.validate();
-                    submitEnabler(inputs, submit, small);
+        const inputTouched = () => {
+            input.touched = true;
+            input.validate();
+            submitEnabler(inputs, submit, small);
+        };
+
+        switch(input.type) {
+            case "input":
+                input.element.addEventListener("blur", inputTouched);
+                input.element.addEventListener("keyup", inputTouched);
+                break;
+
+            case "checkbox":
+            case "select":
+                input.element.addEventListener("change", inputTouched);
+                break;
+
+            case "radio":
+                Array.from(input.element).forEach((radio) => {
+                    radio.addEventListener("change", inputTouched);
                 });
-            });
+                break;
         }
     });
 }
@@ -211,11 +197,10 @@ function submitEnabler(inputs, submit, small) {
     inputs.forEach((input) => {
         if (!input.touched && input.required) {
             allTouched = false;
-            return;
         }
         if (input.touched) {
-            const isValid = input.validate() == 0;
-            allValid = allValid && isValid;
+            const isVallid = input.validate();
+            allValid = allValid && isVallid;
         }
     });
     if (allValid && allTouched) {
@@ -235,11 +220,13 @@ function submitEnabler(inputs, submit, small) {
 
 // DOGAĐAJ NA SUBMIT FORME //
 
-function submited(form, small) {
+function submited(form, smallForm, inputs, smalls, submit) {
     form.addEventListener("submit", (e) => {
         e.preventDefault();
-        small.classList.remove("invisible");
-        small.classList.add("visible");
+        resetForm(form, inputs, smalls, smallForm, submit);
+        form.reset();
+        smallForm.classList.remove("invisible");
+        smallForm.classList.add("visible");
     }); 
 }
 
@@ -249,25 +236,14 @@ function resetForm(form, inputs, smalls, smallForm, submit) {
     form.addEventListener("reset", () => {
         inputs.forEach((input) => {
             input.touched = false;
-            if (input.element && input.element.classList) {
-                input.element.classList.remove("border-danger", "border-success", "border-light", "border-secondary");
-                if (input.type !== "checkbox") {
-                    dayNightInputModifier(input.element, togglerFlag);
-                }
-            } else if (input.type === "radio") {
-                Array.from(input.element).forEach((radio) => {
-                    if (radio.classList) {
-                        radio.classList.remove("border-danger", "border-success");
-                    }
-                });
+            if (input.type === "select" || input.type === "input") {
+                dayNightInputModifier(input.element);
             }
         });
         Array.from(smalls).forEach((small) => {
             small.classList.remove("visible");
             small.classList.add("invisible");
         });
-        smallForm.classList.remove("visible");
-        smallForm.classList.add("invisible");
         error = false;
         touchedFlag = false;
         submitEnabler(inputs, submit, smallForm)
@@ -276,32 +252,44 @@ function resetForm(form, inputs, smalls, smallForm, submit) {
 
 // KRAJ KODA ZA PROVERU VALIDNOSTI PODATAKA NA FORMI //
 
+// FUNKCIJA ZA DINAMIČKI ISPIS (OD SAD D.I.) ELEMENATA //
+
+function dynamicCreating(data, targetElement, generateContent) {
+    data.forEach((text, index) => {
+        targetElement.innerHTML += generateContent(text, index);
+    });
+}
+
 // POČETAK KODA SA FUNKCIONALNOSTIMA MODALA //
 
 const modalBg = document.getElementById("modal-bg");
-const modalCancel = document.querySelector("#modal button");
 const modalForm = document.querySelector("#modal form");
-const modalInput = document.getElementById("modal-email");
 const modalInputSmall = document.getElementById("modal-input-small");
 const modalFormSmall = document.getElementById("modal-form-small");
-const modalSubmit = document.getElementById("modal-submit");       
+const modalSubmit = document.getElementById("modal-submit"); 
+const closeModalElements = document.getElementsByClassName("close-modal");      
 const emailRegEx = /^([a-z]|[0-9]|[\.\-\_]){3,30}@([a-z]|[\.]){5,15}$/;
+const emailErrMssg = "Email must contain @ and .";
+const emailBlankMssg = "Email field is required.";
 
 // OBRADA FORME U MODALU //
 
-const modalInputs = [ 
+const modalInputs = [
     {
-        element: modalInput, 
-        type: "input", 
-        touched: false, 
         required: true,
-        validate: () => inputCheck(true, "input", emailRegEx, modalInput, modalInputSmall, "Email must contain @ and .", "Email field is required."),
+        type: "input",
+        regEx: emailRegEx,
+        element: document.getElementById("modal-email"),
+        small: modalInputSmall,
+        errMssg: emailErrMssg,
+        blankMssg: emailBlankMssg
     }
 ];
 
+initializeInputs(modalInputs);  
 formEvents(modalInputs, modalSubmit, modalFormSmall);
 submitEnabler(modalInputs, modalSubmit, modalFormSmall); 
-submited(modalForm, modalFormSmall);
+submited(modalForm, modalFormSmall, modalInputs, modalInputSmall, modalSubmit);
 
 // MODAL SE ZATVARA 3 SEKUNDE NAKON SUBMITA //
 
@@ -320,17 +308,36 @@ function closeModal() {
     enableScroll();
 }
 
-modalCancel.addEventListener("click", closeModal);
+Array.from(closeModalElements).forEach((element) => { 
+    element.addEventListener("click", closeModal);  
+});
 
 // KRAJ KODA SA FUNKCIONALNOSTIMA MODALA
 
-// FUNKCIJA ZA DINAMIČKI ISPIS (OD SAD D.I.) ELEMENATA //
+// DINAMIČKO DODAVANJE KLASAMA H2 I H3 ELEMENTIMA SA JQUERY //
 
-function dynamicCreating(data, targetElement, generateText) {
-    data.forEach((text, index) => {
-        targetElement.innerHTML += generateText(text, index);
+$(document).ready(function() {
+    $("h2").not("#modal h2, .footer-content-block h2").addClass("fade-in");
+    $("h2").not("#newsletter-title h2").addClass("text-center");
+    $("h2").not(".footer-content-block h2").addClass("text-dark fs-1");
+    $(".footer-content-block h2").addClass("fs-5");
+    $("h3").addClass("fs-5");
+});
+
+// ELEMENTI SE PRIKAZUJU NA SKROL SA ANIMACIJOM //
+
+window.addEventListener("scroll", function () {
+    const pageBottom = window.scrollY + window.innerHeight;
+    const fadeInElements = document.getElementsByClassName("fade-in");
+    
+    Array.from(fadeInElements).forEach((element) => {
+        const divTop = element.offsetTop + element.offsetHeight;
+        const divHeight = element.offsetHeight;
+        if (pageBottom > divTop - divHeight) {
+            element.classList.add("fade-in-after");
+        }
     });
-}
+});
 
 // D.I. LINKOVI U NAV //
 
@@ -413,14 +420,14 @@ function togglerSwap(icon, remove, add){
 }
 
 toggler.addEventListener("click", () => {
-    if (togglerFlag == "day") {
+    if (togglerFlag === "day") {
         togglerSwap(`<i class="fa-solid fa-sun"></i>`, "toggler-night", "toggler-day");
         dayNightSwap(document.getElementsByClassName("text-dark"), "text-dark", "text-light");
         dayNightSwap(document.getElementsByClassName("bg-light"), "bg-light", "bg-dark");
         dayNightSwap(document.getElementsByClassName("bg-dark-subtle"), "bg-dark-subtle", "bg-black");
         dayNightSwap(document.getElementsByClassName("border-secondary"), "border-secondary", "border-light");
         togglerFlag = "night";
-    } else if (togglerFlag == "night") {
+    } else if (togglerFlag === "night") {
         togglerSwap(`<i class="fa-solid fa-moon"></i>`, "toggler-day", "toggler-night");
         dayNightSwap(document.getElementsByClassName("text-light"), "text-light", "text-dark");
         dayNightSwap(document.getElementsByClassName("bg-dark"), "bg-dark", "bg-light");
@@ -445,20 +452,7 @@ $("#hamburger").click(function(){
 
 const url = window.location.href;
 
-if(url.indexOf("author.html") == -1){
-
-    // ODGOVARAJUĆI ELEMENTI SE PRIKAZUJU NA SCROLL SA JQUERY //
-
-    $(window).scroll(function () {
-        let pageBottom = $(window).scrollTop() + $(window).height();
-        $(".fade-in").each(function () {
-            let divTop = $(this).offset().top + $(this).outerHeight();
-            let divHeight = $(this).height();
-            if (pageBottom > divTop - divHeight && $(this).css("opacity") == 0 && $(this).css("top") == "-30px") {
-                $(this).animate({ opacity: 1, top : 0 }, 700);
-            }
-        });
-    });
+if(url.indexOf("author.html") === -1){
 
     // D.I. SLAJDOVA U CAROUSELU U POČETNOJ SEKCIJI SA ID BACKGROUND //
 
@@ -516,7 +510,9 @@ if(url.indexOf("author.html") == -1){
 
     // D.I. DUGMAD U POMENUTOJ SEKCIJI //
 
-    dynamicCreating(Array.from({ length: 3 }), document.getElementById("dots"),
+    const threeElementsArray = Array.from({ length: 3 });
+
+    dynamicCreating(threeElementsArray, document.getElementById("dots"),
         (_, index) => `<div id="dot${index + 1}" class="dot rounded-circle"></div>`
     );
     
@@ -556,7 +552,7 @@ if(url.indexOf("author.html") == -1){
     // POZIVANJE F-JE ZA PRIKAZ SLAJDA I POKRETANJE TAJMERA ZA MENJANJE SLAJDA //
 
     showBgSlide(bgIndex);
-    if(doneLoading) bgChange = setInterval(() => changeBg(1), 5000);
+    bgChange = setInterval(() => changeBg(1), 5000);
 
     // DOGAĐAJI NA KLIK STRELICA I DUGMADI //
 
@@ -596,7 +592,7 @@ if(url.indexOf("author.html") == -1){
     (text) => `<p class="mt-5 text-dark">${text}</p>`
     );
 
-    dynamicCreating(aboutPages, document.getElementById("about-img"),
+    dynamicCreating(Array.from({ length: 2 }), document.getElementById("about-img"),
     (_, index) => `<img class="mt-5 w-75 mx-auto rounded border border-secondary" src="./assets/img/about${index + 1}.jpg" alt="WeldPro doing welding project ${index + 1}"/>`
     );
 
@@ -623,7 +619,7 @@ if(url.indexOf("author.html") == -1){
 
     dynamicCreating(qandas, document.getElementById("qandas"),
         (text) => `<li class="list-group item">
-                        <h5 class="bg-dark-subtle text-dark w-100 m-0 border border-secondary p-2"><i class="fa-solid fa-caret-right orange"></i> ${text.question}</h5>
+                        <h3 class="bg-dark-subtle text-dark w-100 m-0 border border-secondary p-2"><i class="fa-solid fa-caret-right orange"></i> ${text.question}</h3>
                         <p class="bg-light text-dark w-100 m-0 border border-secondary">${text.answer}</p>
                     </li>` 
     );
@@ -637,51 +633,6 @@ if(url.indexOf("author.html") == -1){
         $(this).find(".fa-caret-right").toggleClass("rotate-icon");
     });
 
-    // D.I. COUNTER BLOCKOVA U POMENUTOJ SEKCIJI //
-
-    const counters = [  
-        {
-            text: "Projects done",
-            number: "1200",
-            icon: "check"
-        },
-        {
-            text: "Happy clients",
-            number: "3000",
-            icon: "face-smile"
-        },
-        {
-            text: "Our staff",
-            number: "240",
-            icon: "person"
-        },
-        {
-            text: "Awards won",
-            number: "15",
-            icon: "award"
-        }
-    ];
-
-    dynamicCreating(counters, document.getElementById("counters"),
-        (text) => `<div class="col-md-3 col-sm-6 col-10 mx-auto d-flex flex-column border border-secondary bg-dark-subtle align-items-center">
-                        <i class="my-2 fs-1 text-dark fa-solid fa-${text.icon}"></i>
-                        <h2 class="number my-2 orange">0</h2>
-                        <h5 class="my-2 text-dark">${text.text}</h5>
-                    </div>` 
-    );
-
-    // JQUERY PLUGIN COUNTO ISPIS BROJEVA U COUNTER BLOCKOVIMA //
-
-    $(document).ready(function () {
-        $(window).scroll(function() {
-            if($("#counters").hasClass("fade-in-after")){
-                for(let i = 0; i < counters.length; i++){   
-                    $(".number").eq(i).counto(counters[i].number, 3000);
-                }
-            }
-        });
-    });
-    
     // D.I. SADRŽAJA U SERVICES SEKCIJI //
 
     const services = [
@@ -721,7 +672,7 @@ if(url.indexOf("author.html") == -1){
     (text) => `<div class="mx-auto mt-1 p-3 col-lg-4 col-md-6 col-sm-10 col-xs-12">
                     <div class="rounded border border-secondary p-3 d-flex flex-column justify-content-center align-items-center bg-dark-subtle">
                         <img class="mt-3" src="./assets/img/${text.icon}-welding.png" alt="${text.title} icon"/>
-                        <h5 class="mt-3 text-dark">${text.title} welding</h5>
+                        <h3 class="mt-3 text-dark">${text.title} welding</h3>
                         <p class="mt-3 text-dark">${text.text}</p>
                         <button class="strict-white rounded mt-3 fw-medium px-3 py-1" type="button">Show more</button>
                     </div>
@@ -731,7 +682,7 @@ if(url.indexOf("author.html") == -1){
     // TEKST SE PRIKAZUJE/SKLANJA KLIKOM NA DUGME U POMENUTOJ SEKCIJI SA JQUERY //
 
     $("#services button").click(function() {
-        if ($(this).html() == "Show more") {
+        if ($(this).html() === "Show more") {
             $(this).html("Show less");
         } else {
             $(this).html("Show more");
@@ -762,7 +713,7 @@ if(url.indexOf("author.html") == -1){
         (text) => `<button type="button" class="strict-white rounded border border-0 mx-3 mt-3 fw-medium port-button text-uppercase p-2">${text}</button>`
     );
     
-    dynamicCreating(Array.from({ length: 3 }), document.getElementById("portfolio-images"),
+    dynamicCreating(threeElementsArray, document.getElementById("portfolio-images"),
         (_, index) => `<figure class="col-lg-4 col-sm-8 col-xs-12 mx-auto my-3">
                             <img class="w-100 border border-secondary rounded" src="./assets/img/decorative${index + 1}.jpg" alt="decorative welding project ${index + 1}"/>
                             <figcaption class="mt-1 text-center text-dark">decorative welding project ${index + 1}</figcaption>
@@ -794,7 +745,8 @@ if(url.indexOf("author.html") == -1){
     (text, index) => `<option value="${index}">${text}</option>`
     );
 
-    // D.I. RADIO BUTONA U POMENUTOJ FORMI //
+    // D.I. 
+    //  BUTONA U POMENUTOJ FORMI //
 
     const gens = ["Male", "Female", "Other"];
 
@@ -848,138 +800,92 @@ if(url.indexOf("author.html") == -1){
 
     // VALIDACIJA POMENUTE FORME //
 
-    const contactName = document.getElementById("name");
-    const contactNameSmall = document.getElementById("small-name");
-    const nameRegEx = /^[A-Z][a-z]{2,12}(\s[A-Z][a-z]{2,12}){1,3}$/;
-    const contactEmail = document.getElementById("email");
-    const contactEmailSmall = document.getElementById("small-email");
-    const contactPhone = document.getElementById("phone");
-    const contactPhoneSmall = document.getElementById("small-phone");
-    const phoneRegEx = /^\+[1-9](?:\d[-\s]?){9,13}\d$/;
-    const contactTextArea = document.getElementById("mssg");
-    const contactTextAreaSmall = document.getElementById("small-mssg");
-    const mssgRegEx = /^.{10,1000}$/;
-    const contactSelect = document.getElementById("select");
-    const contactSelectSmall = document.getElementById("small-select"); 
-    const contactRadio = document.getElementsByClassName("contact-radio");
-    const contactRadioSmall = document.getElementById("small-gen"); 
-    const contactCheckBox = document.getElementById("tas-check");  
-    const contactCheckBoxSmall = document.getElementById("small-check");  
     const contactForm = document.getElementById("contact-form");
     const contactSubmit = document.getElementById("contact-submit");
     const contactFormSmall = document.getElementById("small-contact-form");
-    const contactSmalls = document.getElementsByClassName("contact-small");
-    const contactCheckBoxNotMandatory = document.getElementById("subscribe-check");
-    const contactFile = document.getElementById("file-input")
+    const contactSmalls = document.querySelectorAll("#contact-form small");
 
     const contactInputs = [
         { 
-            element: contactName, 
-            type: "input", 
-            touched: false, 
             required: true,
-            validate: () => inputCheck(true, "input", nameRegEx, contactName, contactNameSmall, "Name must start with a capital letter and contain 2-12 characters.", "Name field is required.") 
+            type: "input",
+            regEx: /^[A-Z][a-z]{2,12}(\s[A-Z][a-z]{2,12}){1,3}$/,
+            element: document.getElementById("name"),
+            small: document.getElementById("small-name"),
+            errMssg: "Name must start with a capital letter and contain 2-12 characters.",
+            blankMssg: "Name field is required."
         },
         { 
-            element: contactEmail, 
-            type: "input", 
-            touched: false, 
             required: true,
-            validate: () => inputCheck(true, "input", emailRegEx, contactEmail, contactEmailSmall, "Email must contain @ and .", "Email field is required.") 
+            type: "input",
+            regEx: emailRegEx,
+            element: document.getElementById("email"),
+            small: document.getElementById("small-email"),
+            errMssg: "Email must contain @ and .",
+            blankMssg: "Email field is required."
         },
         { 
-            element: contactPhone, 
-            type: "input", 
-            touched: false, 
             required: false,
-            validate: () => inputCheck(false, "input", phoneRegEx, contactPhone, contactPhoneSmall, "Phone must start with + and contain 11-15 digits.", "") 
+            type: "input",
+            regEx: /^\+[1-9](?:\d[-\s]?){9,13}\d$/,
+            element: document.getElementById("phone"),
+            small: document.getElementById("small-phone"),
+            errMssg: "Phone must start with + and contain 11-15 digits.",
+            blankMssg: ""
         },
         { 
-            element: contactTextArea, 
-            type: "input", 
-            touched: false, 
             required: true,
-            validate: () => inputCheck(true, "input", mssgRegEx, contactTextArea, contactTextAreaSmall, "Message must contain 10-1000 characters.", "Message field is required.") 
+            type: "input",
+            regEx: /^.{10,1000}$/,
+            element: document.getElementById("mssg"),
+            small: document.getElementById("small-mssg"),
+            errMssg: "Message must contain 10-1000 characters.",
+            blankMssg: "Message field is required."
         },
         { 
-            element: contactSelect, 
-            type: "select", 
-            touched: false, 
             required: true,
-            validate: () => inputCheck(true, "select", "", contactSelect, contactSelectSmall, "", "Please select a service.") 
+            type: "select",
+            regEx: "",
+            element: document.getElementById("select"),
+            small: document.getElementById("small-select"),
+            errMssg: "",
+            blankMssg: "Please select a service."
         },
         { 
-            element: contactRadio, 
-            type: "radio", 
-            touched: false, 
             required: true,
-            validate: () => inputCheck(true, "radio", "", contactRadio, contactRadioSmall, "", "") 
+            type: "radio",
+            regEx: "",
+            element: document.getElementsByClassName("contact-radio"),
+            small: document.getElementById("small-gen"),
+            errMssg: "",
+            blankMssg: ""
         },
         { 
-            element: contactCheckBox, 
-            type: "checkbox", 
-            touched: false, 
             required: true,
-            validate: () => inputCheck(true, "checkbox", "", contactCheckBox, contactCheckBoxSmall, "", "Please accept terms and services.") 
+            type: "checkbox",
+            regEx: "",
+            element: document.getElementById("tas-check"),
+            small: document.getElementById("small-check"),
+            errMssg: "",
+            blankMssg: "Please accept terms and services."
         },
         { 
-            element: contactCheckBoxNotMandatory, 
-            type: "checkbox", 
-            touched: false, 
             required: false,
-            validate: () => inputCheck(false, "checkbox", "", contactCheckBoxNotMandatory, "", "", "") 
-        },
-        { 
-            element: contactFile, 
-            type: "file", 
-            touched: false, 
-            required: false,
-            validate: () => inputCheck(false, "file", "", contactFile, "", "", "") 
+            type: "checkbox",
+            regEx: "",
+            element: document.getElementById("subscribe-check"),
+            small: null,
+            errMssg: "",
+            blankMssg: ""
         }
-    ];    
+    ];
 
+    initializeInputs(contactInputs);
     formEvents(contactInputs, contactSubmit, contactFormSmall);
     submitEnabler(contactInputs, contactSubmit, contactFormSmall); 
-    submited(contactForm, contactFormSmall);
-    resetForm(contactForm, contactInputs, contactSmalls, contactFormSmall, contactSubmit);  
+    submited(contactForm, contactFormSmall, contactInputs, contactSmalls, contactSubmit);
 
-    // JQUERY PLUGIN SLICK SLIDER U TESTIMONIALS SEKCIJI //
-
-    $(document).ready(function () {
-        $("#testimonials-slider").slick({
-            dots: true,
-            arrows: true,
-            slidesToShow: 5,
-            responsive: [
-                {
-                    breakpoint: 1400,
-                    settings: {
-                        slidesToShow: 4
-                    }
-                },
-                {
-                    breakpoint: 1200,
-                    settings: {
-                        slidesToShow: 3
-                    }
-                },
-                {
-                    breakpoint: 768,
-                    settings: {
-                        slidesToShow: 2
-                    }
-                },
-                {
-                    breakpoint: 576,
-                    settings: {
-                        slidesToShow: 1
-                    }
-                }
-            ]
-        });
-    });    
-
-    // D.I. SLAJDOVA U POMENUTOJ SEKCIJI //
+    // D.I. SLAJDOVA U TESTIMONIALS SEKCIJI //
 
     const testimonials = [
         {
@@ -1010,13 +916,47 @@ if(url.indexOf("author.html") == -1){
 
     dynamicCreating(testimonials, document.getElementById("testimonials-slider"),
     (text, index) => `<div class="card border border-secondary bg-dark-subtle">
-                        <img src="./assets/img/person${index + 1}.jpg" class="card-img-top" alt="Slide ${index + 1} image">
+                        <img src="./assets/img/person${index + 1}.jpg" class="card-img-top border-bottom border-secondary" alt="Slide ${index + 1} image">
                         <div class="card-body">
-                            <h5 class="card-title orange">${text.name}</h5>
+                            <h3 class="card-title orange">${text.name}</h3>
                             <p class="card-text text-dark">${text.text}</p>
                         </div>
                     </div>`
     );   
+
+    // JQUERY PLUGIN SLICK SLIDER U POMENUTOJ SEKCIJI //
+
+    $("#testimonials-slider").slick({
+        dots: true,
+        arrows: true,
+        slidesToShow: 5,
+        responsive: [
+            {
+                breakpoint: 1400,
+                settings: {
+                    slidesToShow: 4
+                }
+            },
+            {
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 3
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2
+                }
+            },
+            {
+                breakpoint: 576,
+                settings: {
+                    slidesToShow: 1
+                }
+            }
+        ]
+    });
 
     // D.I. DUGMADI U NEWSLETTER SEKCIJI //
 
@@ -1027,25 +967,26 @@ if(url.indexOf("author.html") == -1){
     // OBRADA FORME U NEWSLETTER SEKCIJI // 
 
     const newsletterForm = document.getElementById("newsletter-form");
-    const newsletterInput = document.getElementById("newsletter-email");
-    const newsletterInputSmall = document.getElementById("newsletter-email-small");
     const newsletterSubmit = document.getElementById("newsletter-submit");
     const newsletterFormSmall = document.getElementById("newsletter-form-small");
-    const newsletterSmalls = document.getElementsByClassName("newsletter-small");
+    const newsletterSmalls = document.querySelectorAll("#newsletter-form small");
 
     const newsletterInputs = [
         {
-            element: newsletterInput, 
-            type: "input", 
-            touched: false, 
             required: true,
-            validate: () => inputCheck(true, "input", emailRegEx, newsletterInput, newsletterInputSmall, "Email must contain @ and .", "Email field is required.")
+            type: "input",
+            regEx: emailRegEx,
+            element: document.getElementById("newsletter-email"),
+            small: document.getElementById("newsletter-email-small"),
+            errMssg: "Email must contain @ and .",
+            blankMssg: "Email field is required."
         }
     ];
 
+    initializeInputs(newsletterInputs);
     formEvents(newsletterInputs, newsletterSubmit, newsletterFormSmall);
-    submitEnabler(contactInputs, newsletterSubmit, newsletterFormSmall); 
-    submited(newsletterForm, newsletterFormSmall);
+    submitEnabler(newsletterInputs, newsletterSubmit, newsletterFormSmall); 
+    submited(newsletterForm, newsletterFormSmall, newsletterInputs, newsletterSmalls, newsletterSubmit);
     resetForm(newsletterForm, newsletterInputs, newsletterSmalls, newsletterFormSmall, newsletterSubmit); 
 }
 
@@ -1083,8 +1024,8 @@ const footerContentBlocks = [
 ];
 
 dynamicCreating(footerContentBlocks, document.getElementById("footer-content"),
-    (text) => `<div class="col-md-3 col-sm-6 col-12 d-flex flex-column align-items-center my-3">
-                    <h5 class="orange">${text.title}</h5> 
+    (text) => `<div class="footer-content-block col-md-3 col-sm-6 col-12 d-flex flex-column align-items-center my-3">
+                    <h2 class="orange">${text.title}</h2> 
                     <ul id="footer-${text.id}"></ul>   
                 </div>`
 );    
@@ -1092,7 +1033,7 @@ dynamicCreating(footerContentBlocks, document.getElementById("footer-content"),
 // ISPIS NAVIGACIJE U FOOTERU //
 
 dynamicCreating(navLinks, document.getElementById("footer-navigation"),
-    (text) => `<li class="nav-item"><a href="index.html#${text.path}" class="nav-link my-2">${text.name}</a></li>`
+    (text) => `<li class="nav-item"><a href="index.html${text.path}" class="nav-link my-2">${text.name}</a></li>`
 );
 
 // ISPIS SERVISA U FOOTERU //
@@ -1157,11 +1098,9 @@ dynamicCreating(footerEndBlocks, document.getElementById("footer-end"),
 
 // ISPIS DANAŠNJE GODINE U ELEMENTU SA ID COPYRIGHT //
 
-document.addEventListener("DOMContentLoaded", () => {
-    const date = new Date();
-    const year = date.getFullYear();
-    document.getElementById("copyright").innerHTML = `&copy; ${year} WeldPro. All right reserved.`;
-});
+const date = new Date();
+const year = date.getFullYear();
+document.getElementById("copyright").innerHTML = `&copy; ${year} WeldPro. All right reserved.`;
 
 // ISPIS IKONICA DRUŠTVENIH MREŽA U FOOTERU //
 

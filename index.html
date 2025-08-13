@@ -33,12 +33,12 @@
 
         <!-- MOJ CSS -->
 
-        <link rel="stylesheet" href="assets/css/style.css" type="text/css"/>
+        <link rel="stylesheet" href="assets/css/style-min.css" type="text/css"/>
 
         <!-- SLICK JQUERY PLUGIN CSS -->
 
-        <link rel="stylesheet" href="assets\slick\slick\slick.css" type="text/css"/>
-        <link rel="stylesheet" href="assets\slick\slick\slick-theme.css" type="text/css"/>
+        <link rel="stylesheet" href="assets\plugin\slick\slick\slick.css" type="text/css"/>
+        <link rel="stylesheet" href="assets\plugin\slick\slick\slick-theme.css" type="text/css"/>
     </head>
     <body>
 
@@ -50,19 +50,22 @@
 
         <!-- BACK TO TOP DUGME -->
 
-        <div id="back-to-top" class="strict-white shadow position-fixed rounded-circle text-center m-4 bottom-0 end-0"><i class="fa-solid fa-arrow-up fs-1 fw-bold"></i></div>
+        <div id="back-to-top" class="strict-white shadow position-fixed rounded-circle text-center m-4 bottom-0 end-0"><i class="fa-solid fa-chevron-up fs-1 fw-bold"></i></div>
         
         <!-- MODAL -->
 
         <div id="modal-bg" class="z-3 d-none vw-100 vh-100 position-fixed top-0 start-0 d-flex justify-content-center align-items-center">
             <div id="modal" class="border border-secondary rounded bg-dark-subtle col-lg-6 col-sm-8 col-11 d-flex flex-wrap flex-column justify-content-center align-items-center">
-                <div class="w-100"><button type="button" class="border border-0 fw-bold bg-dark-subtle fs-1 text-dark position-relative"><i class="fa-solid fa-x"></i></button></div>
-                <h1 class="text-center mx-5 mt-1 mb-5 fs-1 fw-bold text-dark">Subscribe to our newsletter</h1>
+                <div class="w-100"><button type="button" id="modal-x" class="close-modal border border-0 fw-bold bg-dark-subtle fs-1 text-dark position-relative"><i class="fa-solid fa-x"></i></button></div>
+                <h2 class="mx-5 mt-1 mb-5">Subscribe to our newsletter</h2>
                 <form action="index.php" method="POST" class="mt-5 w-100 d-flex flex-wrap flex-column justify-content-center align-items-center">
                     <label class="fs-5 text-dark" for="modal-email">Enter your email:</label>
                     <input class="rounded my-1 w-75 p-1 border border-2 border-secondary" type="text" id="modal-email" name="modal-email" placeholder="Ex: jonjonson@gmail.com"/>
-                    <small id="modal-input-small" class="invisible text-danger">Invalid email format</small>
-                    <input type="submit" disabled id="modal-submit" name="modal-submit" value="SUBMIT" class="disabled strict-white rounded py-1 px-2 my-1"/>
+                    <small id="modal-input-small" class="invisible text-danger">Email must contain @ and .</small>
+                    <div class="w-100 d-flex justify-content-center">
+                        <input type="submit" id="modal-submit" name="modal-submit" value="SUBMIT" class="strict-white rounded py-1 px-2 my-1 mx-2"/>
+                        <button type="button" id="modal-cancel" class="close-modal strict-white rounded py-1 px-2 my-1 mx-2">CANCEL</button>  
+                    </div>
                     <small id="modal-form-small" class="invisible text-success mb-3">Successfuly submited, please wait...</small>
                 </form>
             </div>
@@ -80,7 +83,7 @@
 
         <!-- MAIN POČETAK -->
 
-        <main class="w-100 bg-light bg-gradient">
+        <main class="w-100 bg-light">
 
         <!-- BACKGROUND SEKCIJA -->
 
@@ -91,29 +94,28 @@
             <!-- ABOUT SEKCIJA -->
 
             <section id="about" class="container fluid py-5">
-                <h2 class="fs-1 fade-in w-100 text-center mt-5 text-dark">About <span class="orange">Us</span></h2>
+                <h2 class="w-100 mt-5">About <span class="orange">us</span></h2>
                 <div id="about-parts-container" class="row d-flex justify-content-evenly align-items-center"></div>
                 <ul id="qandas" class="fade-in mx-auto mt-5 col-lg-8 col-md-10 col-12 list-group"></ul>
-                <div class="row mt-5 fade-in" id="counters"></div>   
             </section>
 
             <!-- SERVISI SEKCIJA -->
 
             <section id="services" class="container fluid py-5">
-                <h2 class="fs-1 fade-in w-100 text-center text-dark mt-5">Our <span class="orange">Services</span></h2>
+                <h2 class="w-100 mt-5">Our <span class="orange">services</span></h2>
                 <div id="service-blocks" class="fade-in row justify-content-between mt-5"></div>
             </section>
 
             <!-- PORTFOLIO SEKCIJA -->
 
             <section id="portfolio" class="mt-5 container-fluid bg-dark-subtle py-5">
-                <h2 class="fs-1 fade-in w-100 text-center pt-5 text-dark">Our <span class="orange">Work Portfolio</span></h2>
+                <h2 class="w-100">Our <span class="orange">work portfolio</span></h2>
             </section>
 
             <!-- KONTAKT SEKCIJA -->
 
             <section id="contact" class="container fluid py-5">
-                <h2 class="fs-1 fade-in w-100 text-center mt-5 text-dark">Contact <span class="orange">Us</span></h2>
+                <h2 class="w-100 mt-5">Contact <span class="orange">us</span></h2>
                 <div class="d-flex mt-5">
                     <div id="contact-form-block" class="fade-in col-md-10 col-12 mx-auto bg-dark-subtle text-dark border border-secondary rounded">
                         <form method="POST" action="index.php" id="contact-form" class="w-75 mx-auto mt-3 h-100">
@@ -121,48 +123,44 @@
                                 <div class="col-md-5 col-12">
                                     <label class="w-100" for="name">Full name: <span class="text-danger">*</span></label>
                                     <input class="contact-input w-100 p-1 border border-secondary border-2 rounded" type="text" id="name" name="name" placeholder="John Johnson"/>
-                                    <small id="small-name" class="contact-small text-danger invisible w-100 mt-1">Invalid name format</small>
+                                    <small id="small-name" class="text-danger invisible w-100 mt-1">Name must start with a capital letter and contain 2-12 characters.</small>
                                 </div>
                                 <div class="col-md-5 col-12">
                                     <label class="w-100" for="email">Email: <span class="text-danger">*</span></label>
                                     <input class="contact-input w-100 p-1 border border-secondary border-2 rounded" type="text" id="email" name="email" placeholder="john_123@example.ex"/>
-                                    <small id="small-email" class="contact-small text-danger invisible w-100 mt-1">Invalid email format</small>
+                                    <small id="small-email" class="text-danger invisible w-100 mt-1">Email must contain @ and .</small>
                                 </div>
                             </div>
                             <div class="d-flex flex-wrap justify-content-between mx-auto">
                                 <div class="col-md-5 col-12">
                                     <label for="phone">Phone:</label>
                                     <input class="contact-input w-100 p-1 border border-secondary border-2 rounded" type="text" id="phone" name="phone" placeholder="+1 2223334444"/>
-                                    <small id="small-phone" class="contact-small text-danger invisible w-100 mt-1">Invalid phone format</small>
+                                    <small id="small-phone" class="text-danger invisible w-100 mt-1">Phone must start with + and contain 11-15 digits.</small>
                                 </div>
                                 <div class="col-md-5 col-12">
                                     <label class="w-100" for="select">Select service: <span class="text-danger">*</span></label>
-                                    <select class="contact-input w-100 border border-secondary border-2 rounded" id="select"></select>
-                                    <small id="small-select" class="contact-small text-danger invisible w-100 mt-1">You must select a service</small>
+                                    <select class="contact-input w-100 border border-secondary border-2 rounded p-1" id="select" name="select"></select>
+                                    <small id="small-select" class="text-danger invisible w-100 mt-1">Please select a service.</small>
                                 </div>
                             </div>
                             <div class="d-flex flex-wrap mx-auto">
                                 <label class="w-100" for="mssg">Write us: <span class="text-danger">*</span></label>
                                 <textarea class="contact-input w-100 p-1 border border-secondary border-2 rounded" id="mssg" name="mssg" placeholder="Message"></textarea>
-                                <small id="small-mssg" class="contact-small text-danger invisible w-100 mt-1">You must fill in this field</small>
+                                <small id="small-mssg" class="text-danger invisible w-100 mt-1">Message must contain 10-1000 characters.</small>
                             </div>
                             <div class="d-flex flex-wrap mx-auto justify-content-between">
                                 <label class="w-100" for="gen">Gender: <span class="text-danger">*</span></label>
                                 <div id="gens" class="d-flex justify-content-evenly flex-wrap w-100"></div>
-                                <small id="small-gen" class="contact-small text-danger invisible w-100 mt-1">You must select a gender</small>
-                            </div>
-                            <div class="d-flex flex-wrap my-1 mx-auto">
-                                <label class="w-100" for="file-input">Send us:</label>
-                                <input type="file" id="file-input" name="file-input"/>
-                            </div>
+                                <small id="small-gen" class="text-danger invisible w-100 mt-1">You must select a gender</small>
+                            </div> 
                             <div class="d-flex flex-wrap my-1 mx-auto">
                                 <ul id="checks" class="list-group w-100"></ul>
-                                <small id="small-check" class="contact-small text-danger invisible w-100 mt-1">You must agree with terms and services</small>
+                                <small id="small-check" class="text-danger invisible w-100 mt-1">Please accept terms and services.</small>
                             </div>
                             <div class="d-flex flex-wrap my-1 mx-auto">
-                                <small class="my-1 w-100"><span class="text-danger">*</span> - Mandatory fields</small>
+                                <p class="my-1 w-100"><span class="text-danger">*</span> - Mandatory fields</p>
                                 <div id="form-buttons" class="mx-auto"></div> 
-                                <small id="small-contact-form" class="contact-small text-success invisible w-100 mt-1 text-center">Form successfuly submited!</small>
+                                <small id="small-contact-form" class="text-success invisible w-100 mt-1 text-center">Form successfuly submited!</small>
                             </div>
                         </form>
                     </div>
@@ -172,21 +170,21 @@
             <!-- TESTIMONIALS SEKCIJA -->
 
             <section id="testimonials" class="container py-5">
-                <h2 class="fs-1 fade-in w-100 text-center my-5 text-dark">Testimonials</h2>
+                <h2 class="w-100 my-5">Testimonials</h2>
                 <div id="testimonials-slider" class="fade-in"></div>
             </section>
 
             <!-- NEWSLETTER SEKCIJA -->
 
-            <section id="newsletter" class="w-100 container-fluid bg-dark-subtle text-dark pt-5 px-3 mt-5">
-                <div class="row d-flex justify-content-evenly">
-                    <div class="col-lg-6 col-md-8 col-sm-10 col-12 my-2 fade-in">
-                        <h2 class="fs-1">Subscribe to <span class="orange">Our Newsletter</span></h2>
+            <section id="newsletter" class="w-100 container-fluid bg-dark-subtle pt-5 px-3 mt-5">
+                <div id="newsletter-title" class="row d-flex justify-content-evenly">
+                    <div class="col-lg-6 col-md-8 col-sm-10 col-12 my-2">
+                        <h2>Subscribe to <span class="orange">our newsletter</span></h2>
                     </div>
                     <div class="col-lg-6 col-md-8 col-sm-10 col-12 d-flex my-2 fade-in">
                         <form class="w-100" id="newsletter-form" method="POST" action="index.php">
                             <input type="text" class="w-100 p-1 border border-secondary border-2 rounded" id="newsletter-email" name="newsletter-email" placeholder="john_123@example.ex"/>
-                            <small id="newsletter-email-small" class="newsletter-small text-danger invisible w-100">Invalid email format</small>
+                            <small id="newsletter-email-small" class="newsletter-small text-danger invisible w-100">Email must contain @ and .</small>
                             <div id="newsletter-buttons" class="w-100 d-flex justify-content-center"></div>
                             <div class="w-100 d-flex justify-content-center">
                                 <small id="newsletter-form-small" class="newsletter-small text-success invisible">Successfuly submited!</small>
@@ -207,16 +205,12 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-        <!-- COUNTO JQUERY PLUGIN -->
-
-        <script src="assets/number-counting/dist/counto.min.js"></script>
-
         <!-- SLICK JQUERY PLUGIN -->
 
-        <script src="assets\slick\slick\slick.min.js"></script>
+        <script src="assets\plugin\slick\slick\slick.min.js"></script>
         
         <!-- MOJ JS -->
 
-        <script src="assets/js/main.js"></script>
+        <script src="assets/js/main-min.js"></script>
     </body>
 </html>
